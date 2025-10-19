@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zakho Institute</title>
+    <link rel="icon" href="images/zakho-removebg-preview.png" type="image/png">
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@100;400;700;900&family=Merriweather:wght@700;900&display=swap">
+    
+    <style>
+        /* Define the color palette and font family */
+        :root {
+            --color-primary: #1e3a8a; /* Deep Blue (Main) */
+            --color-secondary: #10b981; /* Emerald Green (Accent/Success) */
+            --color-header-bg: #60a5fa; /* Light Blue for the new header gradient start */
+            --color-header-end: #3b82f6; /* A mid-blue for gradient end */
+            --color-background-light: #f8f9fa; /* Default Body Background */
+            --color-text-light: #212529;
+            --font-sans: 'Inter', sans-serif;
+            --font-serif: 'Merriweather', serif;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            background-color: var(--color-background-light); 
+            color: var(--color-text-light);
+            /* Keep body transition subtle, the sections will have their own transition */
+            transition: color 0.5s ease; 
+            overflow-x: hidden; 
+        }
+        
+        /* New class for elements whose background will be cycled */
+        .color-cycle-target {
+            transition: background-color 2s ease; /* Smooth transition for color change */
+        }
+
+        h1, h2, h3, .serif-title {
+            font-family: var(--font-serif);
+        }
+
+        /* ------------------------------------- */
+        /* --- Animated Header Styles --- */
+        /* ------------------------------------- */
+        .animated-header {
+            background: linear-gradient(90deg, darkgray, gray, orange, var(--color-primary), darkgray);
+            background-size: 400% 400%;
+            animation: header-color-cycle 15s ease infinite;
+        }
+        
+        @keyframes header-color-cycle {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        .header-logo {
+            height: 70px; 
+            width: auto;
+            filter: brightness(0) invert(1);
+        }
+
+        /* ------------------------------------- */
+        /* --- Dynamic Button Hover Effect --- */
+        /* ------------------------------------- */
+        /* Apply to all actionable elements for dynamic effect */
+        .btn, .lang-button, .navbar-toggler, #backToTopBtn {
+            transition: all 0.3s ease-in-out;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+        
+        /* General Hover Effect: Lift and Shadow */
+        .btn:hover, .lang-button:hover, .navbar-toggler:hover, #backToTopBtn:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2) !important;
+        }
+
+        /* Shine/Ripple Effect on Success Button */
+        .btn-success:not(:disabled):not(.disabled)::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 5px;
+            height: 5px;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 50%;
+            opacity: 0;
+            transform: scale(0) translate(-50%, -50%);
+        }
+
+        .btn-success:not(:disabled):not(.disabled):hover::after {
+            animation: ripple 0.6s ease-out;
+        }
+        
+        @keyframes ripple {
+            0% { transform: scale(0) translate(-50%, -50%); opacity: 1; }
+            100% { transform: scale(30) translate(-50%, -50%); opacity: 0; }
+        }
+        
+        /* Dark Mode Button Specifics */
+        .btn-outline-light:hover {
+            background-color: var(--color-secondary) !important;
+            border-color: var(--color-secondary) !important;
+            color: white !important;
+        }
+
+
+        /* ------------------------------------- */
+        /* --- Dark Mode styles --- */
+        /* ------------------------------------- */
+        
+        body.dark-mode {
+            --color-background-light: #212529;
+            --color-text-light: #f8f9fa;
+            --bs-body-color: #f8f9fa;
+            --bs-body-bg: #212529;
+        }
+        /* Override light background classes in dark mode */
+        body.dark-mode .card,
+        body.dark-mode .bg-light,
+        body.dark-mode .bg-white,
+        body.dark-mode .color-cycle-target { 
+            background-color: #343a40 !important;
+            color: #f8f9fa !important;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5) !important;
+            transition: none; /* Disable cycling transition in dark mode */
+        }
+        
+        /* Other Dark Mode styles... */
+        body.dark-mode #preloader { background: #212529; }
+        body.dark-mode .loader { border: 8px solid rgba(255, 255, 255, 0.1); border-top-color: var(--color-secondary); }
+        body.dark-mode .video-overlay { background: rgba(0, 0, 0, 0.75); }
+        body.dark-mode .text-dark, body.dark-mode .text-opacity-75 { color: #f8f9fa !important; }
+        body.dark-mode .text-secondary, body.dark-mode .text-muted { color: #adb5bd !important; }
+        body.dark-mode .lang-button { background-color: #495057 !important; color: white !important; }
+        body.dark-mode .lang-button.active { background-color: var(--color-secondary) !important; }
+        .footer-icon { transition: transform 0.3s ease, color 0.3s ease; display: inline-block; }
+        .footer-icon:hover { transform: scale(1.3); color: var(--color-secondary) !important; }
+
+        /* [Other Styles from Previous Step remain unchanged: Video Hero, Carousel, Content Card Hover, Footer] */
+        .video-hero-section { position: relative; height: 80vh; min-height: 450px; overflow: hidden; display: flex; align-items: center; justify-content: center; text-align: center; }
+        .video-hero-section video { position: absolute; top: 50%; left: 50%; min-width: 100%; min-height: 100%; width: auto; height: auto; z-index: 0; transform: translate(-50%, -50%); object-fit: cover; animation: fadeInVideo 2s ease-out; }
+        @keyframes fadeInVideo { 0% { opacity: 0.5; transform: translate(-50%, -50%) scale(1.05); } 100% { opacity: 1; transform: translate(-50%, -50%) scale(1); } }
+        .video-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.65); z-index: 1; }
+        .hero-content { position: relative; z-index: 2; color: rgb(41, 44, 52); padding: 20px; animation: slideUp 1s ease-out 0.5s forwards; opacity: 0; }
+        @keyframes slideUp { 0% { opacity: 0; transform: translateY(20px); } 100% { opacity: 1; transform: translateY(0); } }
+        .full-width-carousel { margin-bottom: 5rem; }
+        .carousel-item img { height: 400px; object-fit: cover; filter: brightness(0.9); }
+        .carousel-fade .carousel-item { opacity: 0; transition-duration: 0.6s; transition-property: opacity; }
+        .carousel-fade .carousel-item.active, .carousel-fade .carousel-item-next.carousel-item-start, .carousel-fade .carousel-item-prev.carousel-item-end { opacity: 1; }
+        .carousel-caption { background: rgba(30, 58, 138, 0.6); padding: 15px 20px; border-radius: 8px; max-width: 60%; margin: auto; bottom: 20px; }
+        #backToTopBtn { display: none; position: fixed; bottom: 30px; right: 30px; z-index: 100; border: none; outline: none; background-color: var(--color-secondary); color: white; cursor: pointer; padding: 15px; border-radius: 50%; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); opacity: 0.8; font-size: 20px; }
+        #backToTopBtn:hover { opacity: 1; background-color: var(--color-primary); }
+        #preloader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--color-background-light); z-index: 9999; display: flex; justify-content: center; align-items: center; transition: opacity 0.5s ease-out; }
+        .loader { width: 80px; height: 80px; border: 8px solid rgba(30, 58, 138, 0.2); border-top-color: var(--color-primary); border-radius: 50%; animation: spin 1s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .content-card { transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease; }
+        .content-card:hover { transform: translateY(-5px) scale(1.01); box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.175) !important; border-color: var(--color-primary) !important; }
+        .dev-profile-img { width: 30px; height: 30px; border-radius: 50%; object-fit: cover; margin-right: 5px; vertical-align: middle; transition: transform 0.3s ease; }
+        .dev-attribution-container { display: inline-flex; align-items: center; text-decoration: none; padding: 5px 10px; border-radius: 50px; background-color: rgba(16, 185, 129, 0.15); transition: background-color 0.3s ease; }
+        .dev-attribution-container:hover { background-color: rgba(16, 185, 129, 0.3); }
+        .dev-attribution-container:hover .dev-profile-img { transform: scale(1.1); }
+
+
+    </style>
+</head>
+<body class="text-body">
+
+    <div id="preloader">
+        <div class="loader"></div>
+    </div>
+
+    <script>
+        const contentData = {
+            'en': {
+                dir: 'ltr',
+                site_name: 'Zakho Institute',
+                welcome_headline: 'Shaping the Future, Today.',
+                welcome_text: 'Dedicated to empowering the next generation of technical professionals in the Duhok region. Find your path to success in one of our high-demand programs.',
+                nav_home: 'Home', nav_about: 'About Us', nav_programs: 'Programs', 
+                about_title: 'Our Vision & Mission',
+                about_text: 'To be the leading technical institute in the Zakho region, fostering innovation, digital literacy, and career excellence for all students.',
+                programs_title: 'Explore Our Diverse Programs',
+                programs_text: 'Find your specialized program below. Tuition fees are competitive and focused on providing maximum career value.',
+                contact_text: 'Ready to start your future? Apply for the next intake!',
+                program_petroleum_title: 'Petroleum & Gas Engineering',
+                program_petroleum_price: 'Tuition: 2,400,000 IQD',
+                program_petroleum_desc: 'Focus on exploration, production, and refining processes in the energy sector.',
+                program_computer_title: 'Computer Science & IT',
+                program_computer_price: 'Tuition: 1,400,000 IQD',
+                program_computer_desc: 'Advanced training in software development, networking, and data analysis.',
+                program_accounting_title: 'Accounting & Finance',
+                program_accounting_price: 'Tuition: 1,400,000 IQD',
+                program_accounting_desc: 'Developing financial management, auditing, and business administration skills.',
+                footer_contact_title: 'Contact Zakho Institute', 
+                footer_contact_address: 'Zakho, Duhok Governorate, Iraq', 
+                footer_quick_links: 'Quick Links', 
+                footer_dev: 'Development by Salim Mustefa',
+                slide1_caption: 'Advanced Laboratories: Practical skills in modern facilities.',
+                slide2_caption: 'Dedicated Faculty: Learn from industry experts and professionals.',
+                slide3_caption: 'Career Success: High graduate placement rates in the region.',
+            },
+            'ar': {
+                dir: 'rtl',
+                site_name: 'معهد زاخو',
+                welcome_headline: 'نصنع المستقبل، اليوم.',
+                welcome_text: 'ملتزمون بتمكين الجيل القادم من المهنيين التقنيين في منطقة دهوك. ابحث عن طريقك للنجاح في أحد برامجنا ذات الطلب العالي.',
+                nav_home: 'الرئيسية', nav_about: 'من نحن', nav_programs: 'البرامج', 
+                about_title: 'رؤيتنا ورسالتنا',
+                about_text: 'أن نكون المعهد التقني الرائد في منطقة زاخو، لتعزيز الابتكار ومحو الأمية الرقمية والتميز الوظيفي لجميع الطلاب.',
+                programs_title: 'استكشف برامجنا المتنوعة',
+                programs_text: 'ابحث عن برنامجك المتخصص أدناه. الرسوم الدراسية تنافسية وتركز على توفير أقصى قيمة مهنية.',
+                contact_text: 'هل أنت مستعد لبدء مستقبلك؟ قدم طلبك للدفعة القادمة!',
+                program_petroleum_title: 'هندسة النفط والغاز',
+                program_petroleum_price: 'الرسوم: 2,400,000 دينار عراقي',
+                program_petroleum_desc: 'التركيز على عمليات الاستكشاف والإنتاج والتكرير في قطاع الطاقة.',
+                program_computer_title: 'علوم الحاسوب وتكنولوجيا المعلومات',
+                program_computer_price: 'الرسوم: 1,400,000 دينار عراقي',
+                program_computer_desc: 'تدريب متقدم في تطوير البرمجيات والشبكات وتحليل البيانات.',
+                program_accounting_title: 'المحاسبة والمالية',
+                program_accounting_price: 'الرسوم: 1,400,000 دينار عراقي',
+                program_accounting_desc: 'تطوير مهارات الإدارة المالية والتدقيق وإدارة الأعمال.',
+                footer_contact_title: 'تواصل مع معهد زاخو', 
+                footer_contact_address: 'زاخو، محافظة دهوك، العراق', 
+                footer_quick_links: 'روابط سريعة', 
+                footer_dev: 'تطوير بواسطة سليم مصطفى',
+                slide1_caption: 'مختبرات متقدمة: مهارات عملية في مرافق حديثة.',
+                slide2_caption: 'أعضاء هيئة تدريس متخصصون: تعلم من خبراء الصناعة.',
+                slide3_caption: 'النجاح المهني: معدلات توظيف عالية للخريجين في المنطقة.',
+            },
+            'ku': {
+                dir: 'rtl',
+                site_name: 'په‌یمانگه‌ها زاخو',
+                welcome_headline: 'داهاتیێ چێدکەین، ئەڤرۆ.',
+                welcome_text: 'مەرەما مە ئه‌وه‌ کو نه‌سلێ داهاتی ژ پرۆفیشینالێن ته‌کنیکی ل ده‌ڤه‌را دهۆکێ په‌روه‌ردە بکەین. رێکا سه‌رکه‌فتنێ بدۆزه‌ڤه‌ د ناڤ پرۆگرامێن مه‌ یێن ب داخوازیا بلند.',
+                nav_home: 'سەرەکی', nav_about: 'دەربارەی مە', nav_programs: 'پرۆگرامان', 
+                about_title: 'دیتن و په‌یاما مە',
+                about_text: 'دڤێت ببنه‌ په‌یمانگه‌ها ته‌کنیکی یا سه‌ره‌کی ل ده‌ڤه‌را زاخويي، گرنگیێ ب نوێخوازیێ، خواندنا دیجيتالی و لێهاتیێ ب ده‌ین بۆ هه‌می قوتابیان.',
+                programs_title: 'پرۆگرامێن مە یێن جوداجودا بدۆزەڤە',
+                programs_text: 'پرۆگرامێ خوە یێ تایبه‌تمه‌ند ل خوارێ بدۆزه‌ڤه‌. تێچوویێ خواندنێ گونجاوه‌ و ب سه‌ر پرۆگرامێن ب بهایێ کارکرنێ یێ زۆر ڤه‌ گرێدایه‌.',
+                contact_text: 'حازری ده‌ست ب داهاتیا خوە بکی؟ داخازنامێ پێشکێش بکه‌ بۆ وه‌رگرتنا پشکێن بهێت!',
+                program_petroleum_title: 'ئه‌ندازیاریا په‌ترۆل و گازی',
+                program_petroleum_price: 'تێچوو: 2,400,000 دینارێ عیراقی',
+                program_petroleum_desc: 'گرنگیێ ب گه‌ڕیان، بەرهەمئینان و پرۆسێن پالاوگه‌هکرنێ ل که‌رتێ وه‌رگازێ دده‌ت.',
+                program_computer_title: 'زانستێ کۆمپیوتەری و ئایتی',
+                program_computer_price: 'تێچوو: 1,400,000 دینارێ عیراقی',
+                program_computer_desc: 'راهێنانا پێشکه‌فتی ل سه‌ر په‌ره‌پێدانا سۆفتوێری، تۆڕ و شیکاریا داتایێ.',
+                program_accounting_title: 'ژمێریاری و دارایی',
+                program_accounting_price: 'تێچوو: 1,400,000 دینارێ عیراقی',
+                program_accounting_desc: 'په‌ره‌پێدانا ژێهاتیێن رێڤه‌برنا دارایی، ڤه‌کۆلینا ژمێریاری و رێڤه‌برنا کاران.',
+                footer_contact_title: 'په‌یوه‌ندی ب په‌یمانگه‌ها زاخو ڤه‌ بکه‌', 
+                footer_contact_address: 'زاخو، پارێزگه‌ها دهۆکێ، عیراق', 
+                footer_quick_links: 'لینکێن بزووین', 
+                footer_dev: 'پەرەپێدان ژلایێ سالیم مستەفاڤە',
+                slide1_caption: 'تاقیگه‌هێن پێشکه‌فتی: لێهاتیێن پراکتیکی د په‌یمانگه‌هێن مۆدێرن دا.',
+                slide2_caption: 'مامۆستایێن سه‌ربلند: ژ لایه‌نێن پسپۆڕێن پیشه‌سازیێ فێربه‌.',
+                slide3_caption: 'سه‌رکه‌فتنا کارکرنێ: رێژه‌یێن بلند یێن دانانا ده‌رچوویان د ناڤچۆیێ دا.',
+            }
+        };
+
+        let currentLang = 'en';
+
+        function switchLanguage(lang) {
+            currentLang = lang;
+            const content = contentData[lang];
+            const body = document.querySelector('body');
+
+            // Set text direction
+            body.setAttribute('dir', content.dir);
+
+            // Update all text elements (omitted for brevity, assume function works)
+            document.getElementById('site-name').textContent = content.site_name;
+            document.getElementById('welcome-headline').textContent = content.welcome_headline;
+            document.getElementById('welcome-text').textContent = content.welcome_text;
+            document.getElementById('nav-home').textContent = content.nav_home;
+            document.getElementById('nav-about').textContent = content.nav_about;
+            document.getElementById('nav-programs').textContent = content.nav_programs;
+            document.getElementById('about-title').textContent = content.about_title;
+            document.getElementById('about-text').textContent = content.about_text;
+            document.getElementById('programs-title').textContent = content.programs_title;
+            document.getElementById('programs-text').textContent = content.programs_text;
+            document.getElementById('contact-text').textContent = content.contact_text;
+            document.getElementById('footer-dev').textContent = content.footer_dev;
+            document.getElementById('contact-title').textContent = content.footer_contact_title;
+            document.getElementById('contact-address').textContent = content.footer_contact_address;
+            document.getElementById('footer-quick-links').textContent = content.footer_quick_links;
+            document.getElementById('prog-petroleum-title').textContent = content.program_petroleum_title;
+            document.getElementById('prog-petroleum-price').textContent = content.program_petroleum_price;
+            document.getElementById('prog-petroleum-desc').textContent = content.program_petroleum_desc;
+            document.getElementById('prog-computer-title').textContent = content.program_computer_title;
+            document.getElementById('prog-computer-price').textContent = content.program_computer_price;
+            document.getElementById('prog-computer-desc').textContent = content.program_computer_desc;
+            document.getElementById('prog-accounting-title').textContent = content.program_accounting_title;
+            document.getElementById('prog-accounting-price').textContent = content.program_accounting_price;
+            document.getElementById('prog-accounting-desc').textContent = content.program_accounting_desc;
+            document.getElementById('slide1-caption').textContent = content.slide1_caption;
+            document.getElementById('slide2-caption').textContent = content.slide2_caption;
+            document.getElementById('slide3-caption').textContent = content.slide3_caption;
+
+
+            // Update active button state
+            document.querySelectorAll('.lang-button').forEach(btn => {
+                btn.classList.remove('active', 'bg-success', 'text-white', 'btn-dark', 'btn-light');
+                
+                if (document.body.classList.contains('dark-mode')) {
+                    btn.classList.add('btn-dark', 'text-white');
+                } else {
+                    btn.classList.add('btn-light', 'text-dark');
+                }
+
+                if (btn.dataset.lang === lang) {
+                    btn.classList.add('active', 'bg-success', 'text-white');
+                    btn.classList.remove('btn-dark', 'btn-light', 'text-dark');
+                }
+            });
+        }
+
+        // Dark Mode Logic
+        function toggleDarkMode() {
+            const isDark = document.body.classList.toggle('dark-mode');
+            localStorage.setItem('darkMode', isDark);
+            
+            // Re-run color cycle function to reset light mode backgrounds if toggling
+            if (!isDark) {
+                cycleSectionColor(true); // Reset to base color when switching to light mode
+            }
+            switchLanguage(currentLang);
+        }
+        
+        // --- UPDATED: Automatic Section Color Cycle Logic ---
+        const cycleColors = [
+            '#ffffff',               // White
+            'rgb(220, 220, 220)',    // Light Gray (RGB)
+            '#f5f5f5'                // Whitesmoke
+        ];
+        let colorIndex = 0;
+
+        function cycleSectionColor(reset = false) {
+            const body = document.body;
+            
+            // Only apply the color cycle if Dark Mode is NOT active
+            if (!body.classList.contains('dark-mode')) {
+                // Find all elements targeted for light background (sections and cards)
+                const targetElements = document.querySelectorAll('.color-cycle-target');
+                
+                let nextColor;
+                if (reset) {
+                    nextColor = '#ffffff'; // Use white as the base reset color
+                    colorIndex = 0;
+                } else {
+                    nextColor = cycleColors[colorIndex];
+                    colorIndex = (colorIndex + 1) % cycleColors.length; // Cycle to the next color
+                }
+                
+                // Apply the next color to all targeted elements
+                targetElements.forEach(el => {
+                    el.style.backgroundColor = nextColor;
+                });
+            }
+        }
+        
+        // Set an interval to change the color every 10 seconds (10000ms)
+        setInterval(cycleSectionColor, 10000); 
+        // --- END UPDATED: Automatic Section Color Cycle Logic ---
+
+        // Back to Top Button Logic
+        window.onscroll = function() { scrollFunction() };
+
+        function scrollFunction() {
+            const btn = document.getElementById("backToTopBtn");
+            if (document.body.scrollTop > 500 || document.documentElement.scrollTop > 500) {
+                btn.style.display = "block";
+            } else {
+                btn.style.display = "none";
+            }
+        }
+
+        function topFunction() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+        
+        // Initialize content and dark mode on load
+        window.onload = () => {
+            // 1. Apply dark mode preference if stored
+            if (localStorage.getItem('darkMode') === 'true') {
+                document.body.classList.add('dark-mode');
+            } else {
+                 // Set initial background color for the cycle to start correctly
+                 cycleSectionColor(); 
+            }
+            
+            switchLanguage('en'); // Default to English
+
+            // 2. Hide Preloader after 5 seconds
+            setTimeout(function() {
+                const preloader = document.getElementById('preloader');
+                if (preloader) {
+                    preloader.style.opacity = '0';
+                    setTimeout(function() {
+                        preloader.style.display = 'none';
+                    }, 500); // Wait for the fade out to finish (0.5s transition)
+                }
+            }, 5000); // 5000 milliseconds = 5 seconds
+        };
+    </script>
+
+    <header class="animated-header shadow-lg sticky-top z-3">
+        <nav class="navbar navbar-expand-lg navbar-dark p-3">
+            <div class="container-xl">
+                <a class="navbar-brand d-flex align-items-center" href="#">
+                    <img src="images/zakho-removebg-preview.png" onerror="this.onerror=null;this.src='https://placehold.co/150x70/1e3a8a/ffffff?text=ZAKHO+INSTITUTE';" alt="Zakho Institute Logo" class="header-logo me-2">
+                    <span id="site-name" class="fs-4 fw-bold text-white text-uppercase">Zakho Institute</span>
+                </a>
+
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ms-auto mb-2 mb-lg-0 fw-bold">
+                        <li class="nav-item"><a class="nav-link text-white hover:text-success" href="#home" id="nav-home">Home</a></li>
+                        <li class="nav-item"><a class="nav-link text-white hover:text-success" href="#about" id="nav-about">About Us</a></li>
+                        <li class="nav-item"><a class="nav-link text-white hover:text-success" href="#programs" id="nav-programs">Programs</a></li>
+                        </ul>
+
+                    <div class="d-flex align-items-center ms-lg-4 mt-3 mt-lg-0">
+                        <div class="btn-group me-3 p-1 rounded-pill bg-white shadow-sm">
+                            <button data-lang="en" onclick="switchLanguage('en')" class="lang-button btn btn-sm rounded-pill px-3 py-1 btn-light text-dark">EN</button>
+                            <button data-lang="ar" onclick="switchLanguage('ar')" class="lang-button btn btn-sm rounded-pill px-3 py-1 btn-light text-dark">AR</button>
+                            <button data-lang="ku" onclick="switchLanguage('ku')" class="lang-button btn btn-sm rounded-pill px-3 py-1 btn-light text-dark">KU</button>
+                        </div>
+                        <button onclick="toggleDarkMode()" class="btn btn-sm btn-outline-light rounded-circle p-2 shadow-sm">
+                            <i class="fas fa-moon"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <section id="home" class="video-hero-section shadow-lg">
+        <video autoplay muted loop playsinline poster="placeholder_image.jpg">
+            <source src="zakho.mp4.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+        
+        <div class="video-overlay"></div>
+        
+        <div class="hero-content container-xl">
+            <span class="badge bg-success text-uppercase mb-2">Your Future Starts Here</span>
+            <h1 id="welcome-headline" class="display-3 fw-bolder text-white mb-4 serif-title">Shaping the Future, Today.</h1>
+            <p id="welcome-text" class="lead text-white text-opacity-75 mb-5 mx-auto" style="max-width: 800px;">
+                Dedicated to empowering the next generation of technical professionals in the Duhok region. Find your path to success in one of our high-demand programs.
+            </p>
+            
+            <a href="#home" class="btn btn-success btn-lg fw-bold px-5 rounded-pill shadow-sm me-3">
+                Start Your Journey
+            </a>
+            </div>
+    </section>
+
+    <main class="py-5">
+        
+        <div id="instituteCarousel" class="carousel slide carousel-fade full-width-carousel" data-bs-ride="carousel" data-bs-interval="4000" data-bs-pause="hover">
+            <div class="carousel-indicators">
+                <button type="button" data-bs-target="#instituteCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                <button type="button" data-bs-target="#instituteCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                <button type="button" data-bs-target="#instituteCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
+            </div>
+            <div class="carousel-inner">
+                
+                <div class="carousel-item active">
+                    <img src="photo_7_2025-10-19_00-56-32.jpg" class="d-block w-100" alt="Institute Laboratories">
+                    <div class="carousel-caption d-none d-md-block">
+                        <h5 class="fw-bold fs-4" id="slide1-caption">Advanced Laboratories: Practical skills in modern facilities.</h5>
+                    </div>
+                </div>
+                
+                <div class="carousel-item">
+                    <img src="photo_3_2025-10-19_00-56-54.jpg" class="d-block w-100" alt="Expert Faculty">
+                    <div class="carousel-caption d-none d-md-block">
+                        <h5 class="fw-bold fs-4" id="slide2-caption">Dedicated Faculty: Learn from industry experts and professionals.</h5>
+                    </div>
+                </div>
+                
+                <div class="carousel-item">
+                    <img src="photo_2_2025-10-19_00-56-32.jpg" class="d-block w-100" alt="Graduate Success">
+                    <div class="carousel-caption d-none d-md-block">
+                        <h5 class="fw-bold fs-4" id="slide3-caption">Career Success: High graduate placement rates in the region.</h5>
+                    </div>
+                    
+                </div>
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#instituteCarousel" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#instituteCarousel" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </button>
+        </div>
+
+
+        <section id="about" class="color-cycle-target py-5">
+            <div class="container-xl">
+                <div class="text-center mb-5">
+                    <span class="text-uppercase fw-semibold text-primary">Our Foundation</span>
+                    <h2 id="about-title" class="mt-2 display-5 fw-bolder text-dark serif-title">Our Vision & Mission</h2>
+                </div>
+                <div class="card p-4 rounded-4 shadow-lg content-card color-cycle-target border-top border-4 border-success hover:border-primary">
+                    <div class="card-body">
+                        <p id="about-text" class="fs-5 text-secondary lead">
+                            To be the leading technical institute in the Zakho region, fostering innovation, digital literacy, and career excellence for all students.
+                        </p>
+                    </div>
+                </div>
+                <div class="row mt-5 text-center">
+                    <div class="col-md-4 mb-4">
+                        <div class="card p-4 rounded-4 shadow-sm content-card color-cycle-target border-0">
+                            <i class="fas fa-flask fa-3x text-success mx-auto mb-3"></i>
+                            <h3 class="fw-bold fs-5 text-dark">Modern Facilities</h3>
+                            <p class="text-muted small">State-of-the-art labs and equipment for practical learning.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-4">
+                        <div class="card p-4 rounded-4 shadow-sm content-card color-cycle-target border-0">
+                            <i class="fas fa-user-tie fa-3x text-success mx-auto mb-3"></i>
+                            <h3 class="fw-bold fs-5 text-dark">Expert Faculty</h3>
+                            <p class="text-muted small">Industry professionals guiding your technical development.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-4">
+                        <div class="card p-4 rounded-4 shadow-sm content-card color-cycle-target border-0">
+                            <i class="fas fa-bolt fa-3x text-success mx-auto mb-3"></i>
+                            <h3 class="fw-bold fs-5 text-dark">Career Focus</h3>
+                            <p class="text-muted small">High placement rate and internship opportunities.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="programs" class="py-5 container-xl">
+            <div class="text-center mb-5">
+                <span class="text-uppercase fw-semibold text-success">Our Offerings</span>
+                <h2 id="programs-title" class="mt-2 display-5 fw-bolder text-dark serif-title">Explore Our Diverse Programs</h2>
+                <p id="programs-text" class="lead text-secondary mt-3 mx-auto" style="max-width: 800px;">
+                    Find your specialized program below. Tuition fees are competitive and focused on providing maximum career value.
+                </p>
+            </div>
+
+            <div class="row g-4">
+                <div class="col-md-6 col-lg-4">
+                    <div class="card rounded-4 shadow-lg content-card color-cycle-target overflow-hidden border-bottom border-4 border-success hover:border-primary h-100">
+                        <img src="patrol.jpg" class="card-img-top" alt="Petroleum Program" style="height: 200px; object-fit: cover;">
+                        <div class="card-body p-4">
+                            <h3 id="prog-petroleum-title" class="fs-4 fw-bold text-primary mb-2 serif-title">Petroleum & Gas Engineering</h3>
+                            <p id="prog-petroleum-desc" class="card-text text-secondary mb-3">Focus on exploration, production, and refining processes in the energy sector.</p>
+                            <p id="prog-petroleum-price" class="fw-bolder fs-5  mb-4">Tuition: 2,400,000 IQD</p>
+                            <a href="#" class="text-success fw-semibold text-decoration-none hover:text-primary">View Details →</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4">
+                    <div class="card rounded-4 shadow-lg content-card color-cycle-target overflow-hidden border-bottom border-4 border-success hover:border-primary h-100">
+                        <img src="com.jpg" class="card-img-top" alt="Computer Program" style="height: 200px; object-fit: cover;">
+                        <div class="card-body p-4">
+                            <h3 id="prog-computer-title" class="fs-4 fw-bold text-primary mb-2 serif-title">Computer Science & IT</h3>
+                            <p id="prog-computer-desc" class="card-text text-secondary mb-3">Advanced training in software development, networking, and data analysis.</p>
+                            <p id="prog-computer-price" class="fw-bolder fs-5  mb-4">Tuition: 1,400,000 IQD</p>
+                            <a href="#" class="text-success fw-semibold text-decoration-none hover:text-primary">View Details →</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4">
+                    <div class="card rounded-4 shadow-lg content-card color-cycle-target overflow-hidden border-bottom border-4 border-success hover:border-primary h-100">
+                        <img src="acc.jpg" class="card-img-top" alt="Accounting Program" style="height: 200px; object-fit: cover;">
+                        <div class="card-body p-4">
+                            <h3 id="prog-accounting-title" class="fs-4 fw-bold text-primary mb-2 serif-title">Accounting & Finance</h3>
+                            <p id="prog-accounting-desc" class="card-text text-secondary mb-3">Developing financial management, auditing, and business administration skills.</p>
+                            <p id="prog-accounting-price" class="fw-bolder fs-5  mb-4">Tuition: 1,400,000 IQD</p>
+                            <a href="#" class="text-success fw-semibold text-decoration-none hover:text-primary">View Details →</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="bg-primary py-5 mt-5">
+            <div class="container-xl text-center">
+                <h2 id="contact-text" class="display-6 fw-bolder text-white mb-4 serif-title">Ready to start your future? Apply for the next intake!</h2>
+                <a href="#home" class="btn btn-success btn-lg fw-bold px-5 rounded-pill shadow-lg">
+                    Apply Now
+                </a>
+            </div>
+        </section>
+
+    </main>
+
+    <button onclick="topFunction()" id="backToTopBtn" title="Go to top">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <footer class="bg-dark text-white py-5">
+        <div class="container-xl">
+            <div class="row">
+                <div class="col-md-4 mb-4 mb-md-0 text-center text-md-start">
+                    <h5 id="contact-title" class="fw-bold text-success mb-3">Contact Zakho Institute</h5>
+                    <p class="text-secondary mb-1">
+                        <i class="fas fa-map-marker-alt me-2"></i> 
+                        <span id="contact-address">Zakho, Duhok Governorate, Iraq</span>
+                    </p>
+                    <p class="text-secondary mb-1">
+                        <i class="fas fa-phone me-2"></i> Call/WhatsApp: 
+                        <a href="tel:07506824545" class="text-success text-decoration-none fw-bold">07506824545</a>
+                    </p>
+                    <p class="text-secondary mb-1">
+                        <i class="fas fa-mobile-alt me-2"></i> Mobile: 
+                        <a href="tel:07506834545" class="text-success text-decoration-none fw-bold">07506834545</a>
+                    </p>
+                    <div class="d-flex justify-content-center justify-content-md-start space-x-4 mt-3">
+                        <a href="https://wa.me/9647506824545" target="_blank" class="footer-icon text-secondary mx-2" title="WhatsApp 1">
+                            <i class="fab fa-whatsapp fa-2x"></i>
+                        </a>
+                        <a href="https://www.instagram.com/zakho.institute?igsh=ZTRzNXB1ZzAwNXRi" target="_blank" class="footer-icon text-secondary mx-2" title="Instagram">
+                            <i class="fab fa-instagram fa-2x"></i>
+                        </a>
+                        <a href="https://tiktok.com/@zakhoinstitute" target="_blank" class="footer-icon text-secondary mx-2" title="TikTok">
+                            <i class="fab fa-tiktok fa-2x"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="col-md-4 mb-4 mb-md-0">
+                    <h5 id="footer-quick-links" class="fw-bold text-success mb-3 text-center">Quick Links</h5>
+                    <ul class="list-unstyled text-secondary small text-center">
+                         <li><a href="#about" class="text-secondary text-decoration-none hover:text-success">About Us</a></li>
+                         <li><a href="#programs" class="text-secondary text-decoration-none hover:text-success">Programs</a></li>
+                         <li><a href="/admissions" class="text-secondary text-decoration-none hover:text-success">Apply Now</a></li>
+                    </ul>
+                    <div class="ratio ratio-4x3 rounded-3 overflow-hidden shadow-lg mt-3" style="max-height: 200px;">
+                        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1668.7905141253488!2d42.7093554162985!3d37.14920612668585!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x400263f3531b272f%3A0xc3f60f6071060e2!2sZakho%20Institute!5e0!3m2!1sen!2siq!4v1678886400000!5m2!1sen!2siq" width="100%" height="300" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                    </div>
+                </div>
+
+                <div class="col-md-4 text-center text-md-end d-flex flex-column justify-content-end align-items-center align-items-md-end">
+                    <h5 class="fw-bold text-success mb-3">Follow Us</h5>
+                    <div class="w-100 text-center text-md-end">
+                        <p class="text-secondary mb-2 mt-4">© <script>document.write(new Date().getFullYear())</script> Zakho Institute. All Rights Reserved.</p>
+                        <a href="https://www.instagram.com/sallimmustafaaa?igsh=ODJvbXdrNThlZThv" class="dev-attribution-container" title="Meet the Developer">
+                            <img src="images/salo.jpg"  onerror="this.onerror=null;this.src='https://placehold.co/30x30/10b981/ffffff?text=SM';" alt="Salim Mustefa" class="dev-profile-img">
+                            <span id="footer-dev" class="text-white small fw-bold">Development by Salim Mustefa</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+</body>
+</html>
